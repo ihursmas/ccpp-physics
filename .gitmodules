@@ -3,5 +3,6 @@
   url = https://github.com/earth-system-radiation/rte-rrtmgp
   branch = main
 [submodule "physics/MP/pumas/PUMAS"]
-	path = physics/MP/pumas/PUMAS
-	url = https://github.com/ihursmas/PUMAS
+  path = physics/MP/pumas/PUMAS
+  url = https://github.com/ihursmas/PUMAS
+  branch = pumas
