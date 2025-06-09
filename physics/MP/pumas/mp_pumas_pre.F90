@@ -87,7 +87,6 @@ contains
 !    real(kind_phys) :: tx1, tice_all, esl, esi, deles
 !    real(kind_phys), dimension(micro_ncol,micro_nlev) :: tx, tx2
     real(kind_phys) :: tx, tx1, tx2, tice_all, esl, esi, deles, rhoair
-!    real(kind_phys), dimension(1:micro_ncol,1:micro_nlev) :: tgrs_loc, cldliq_loc
 !- IH
 
     ! Outputs
@@ -127,10 +126,6 @@ contains
     micro_numgraup(:, 1:micro_nlev) = qgrs(:, 1:micro_nlev, ntgnc)
     micro_pmid(:, 1:micro_nlev)     = prsl(:, 1:micro_nlev)
     micro_pint(:, 1:micro_nlev)     = prsi(:, 1:micro_nlevp1)
-!+ IH
-!    tgrs_loc(1:micro_ncol, 1:micro_nlev)       = tgrs(1:micro_ncol, 1:micro_nlev)
-!    cldliq_loc(1:micro_ncol, 1:micro_nlev)     = qgrs(1:micro_ncol, 1:micro_nlev, ntcw) 
-!- IH
 
 !+++++ IH
 ! In CAM, sub 'clubb_tend_cam' sets var 'relvar' to 2 when 'deep_scheme'  ==  'CLUBB_SGS' and relvar(i,k) = min(10.,max(0.001,rcm(i,k)**2/qclvar(i,k))) otherwise.
@@ -172,53 +167,50 @@ contains
 ! [ Question: Var 'cld_shoc' is more likely a CLUBB-related field. Is it critical for the performance of PUMAS? ]
 
     ! microphysics stratiform cloud area fraction
-    micro_strat_cldfrc(:, 1:micro_nlev) = 0.3_kind_phys
+!    micro_strat_cldfrc(:, 1:micro_nlev) = 0.0_kind_phys
 
     ! microphysics stratiform cloud liquid area fraction
-    micro_strat_liq_cldfrc(:, 1:micro_nlev) = 0.2_kind_phys
+!    micro_strat_liq_cldfrc(:, 1:micro_nlev) = 0.0_kind_phys
 
     ! microphysics stratiform cloud ice area fraction
-    micro_strat_ice_cldfrc(:, 1:micro_nlev) = 0.1_kind_phys
+!    micro_strat_ice_cldfrc(:, 1:micro_nlev) = 0.0_kind_phys
 
 ! The code below is adapted from a part near the end of sub 'm_micro_run'
-!!    tice_all = tice_i - 40._kind_phys
-!    tice_all = 243.15_kind_phys
-!!    tx = 0._kind_phys
-!!    tx1 = 0._kind_phys
-!!    tx2 = 0._kind_phys
-!    do i = 1, micro_ncol
-!      do k = 1, micro_nlev
-!        ! Determining tx1 - adapted from m_micro_pre.F90 & m_micro.F90
-!        if ( do_shoc ) then
-!          tx1 = min( cld_shoc(i,k) + clcn_i(i,k), 1._kind_phys)
-!        else
-!          tx1 = min( clcn_i(i,k), 1._kind_phys)
-!        end if
-!        ! Determing tx and tx2 for total, liquid, and ice cloud fractions
-!        if ( tx1 .gt. 0._kind_phys ) then
-!          tx = min(max(tx1, 1.e-5_kind_phys), 1._kind_phys)
-!        else
-!          tx = 0._kind_phys
-!        end if
-!        micro_strat_cldfrc(i,k) = tx
-!!        if ( tgrs(i,k) .gt. tice_i ) then
-!        if ( tgrs(i,k) .gt. 273.15_kind_phys ) then
-!!        if ( tgrs_loc(i,k) .gt. 273.15_kind_phys ) then
-!          micro_strat_liq_cldfrc(i,k) = tx
-!          micro_strat_ice_cldfrc(i,k) = 0._kind_phys
-!        else if ( tgrs(i,k) .le. tice_all ) then
-!!        else if ( tgrs_loc(i,k) .le. tice_all ) then
-!          micro_strat_liq_cldfrc(i,k) = 0._kind_phys
-!          micro_strat_ice_cldfrc(i,k) = tx
-!        else
-!!          tx2 = tx * (tice_i - tgrs(i,k)) / (tice_i - tice_all)
-!          tx2 = tx * (273.15_kind_phys - tgrs(i,k)) / 40._kind_phys
-!!          tx2 = tx * (273.15_kind_phys - tgrs_loc(i,k)) / 40._kind_phys
-!          micro_strat_ice_cldfrc(i,k) = tx2
-!          micro_strat_liq_cldfrc(i,k) = tx - tx2
-!        end if
-!      end do
-!    end do
+!    tice_all = tice_i - 40._kind_phys
+    tice_all = 243.15_kind_phys
+!    tx = 0._kind_phys
+!    tx1 = 0._kind_phys
+!    tx2 = 0._kind_phys
+    do i = 1, micro_ncol
+      do k = 1, micro_nlev
+        ! Determining tx1 - adapted from m_micro_pre.F90 & m_micro.F90
+        if ( do_shoc ) then
+          tx1 = min( cld_shoc(i,k) + clcn_i(i,k), 1._kind_phys)
+        else
+          tx1 = min( clcn_i(i,k), 1._kind_phys)
+        end if
+        ! Determing tx and tx2 for total, liquid, and ice cloud fractions
+        if ( tx1 .gt. 0._kind_phys ) then
+          tx = min(max(tx1, 1.e-5_kind_phys), 1._kind_phys)
+        else
+          tx = 0._kind_phys
+        end if
+        micro_strat_cldfrc(i,k) = tx
+!        if ( tgrs(i,k) .gt. tice_i ) then
+        if ( tgrs(i,k) .gt. 273.15_kind_phys ) then
+          micro_strat_liq_cldfrc(i,k) = tx
+          micro_strat_ice_cldfrc(i,k) = 0._kind_phys
+        else if ( tgrs(i,k) .le. tice_all ) then
+          micro_strat_liq_cldfrc(i,k) = 0._kind_phys
+          micro_strat_ice_cldfrc(i,k) = tx
+        else
+!          tx2 = tx * (tice_i - tgrs(i,k)) / (tice_i - tice_all)
+          tx2 = tx * (273.15_kind_phys - tgrs(i,k)) / 40._kind_phys
+          micro_strat_ice_cldfrc(i,k) = tx2
+          micro_strat_liq_cldfrc(i,k) = tx - tx2
+        end if
+      end do
+    end do
 !----- IH
 
 
@@ -275,25 +267,21 @@ contains
     micro_frzdep(:, 1:micro_nlev) = 0._kind_phys
 
 
-    micro_naai(:, 1:micro_nlev) = 0._kind_phys
+!    micro_naai(:, 1:micro_nlev) = 0._kind_phys
     ! (ad-hoc) deposition/condensation nucleation in mixed clouds (-37 C < T < 0 C) following Meyers et al. (1992)
-!    do i = 1, micro_ncol
-!      do k = 1, micro_nlev
-!        if ( tgrs(i,k) .lt. 273.15_kind_phys .and. tgrs(i,k) .gt. 236.15_kind_phys .and. qgrs(i, k, ntcw) .gt. 1.e-12_kind_phys ) then
-!!        if ( tgrs_loc(i,k) .lt. 273.15_kind_phys .and. tgrs_loc(i,k) .gt. 236.15_kind_phys .and. cldliq_loc(i, k) .gt. 1.e-12_kind_phys ) then
-!          esl = svp_water(tgrs(i,k))
-!          esi = svp_ice(tgrs(i,k))
-!!          esl = svp_water(tgrs_loc(i,k))
-!!          esi = svp_ice(tgrs_loc(i,k))
-!          deles = (esl - esi)
-!          rhoair = prsl(i,k)/(rair*tgrs(i,k))
-!!          rhoair = prsl(i,k)/(rair*tgrs_loc(i,k))
-!          micro_naai(i,k) = 1.e3_kind_phys * exp( 12.96_kind_phys*deles/esi - 0.639_kind_phys ) / rhoair / micro_timestep ! kg-1 s-1 
-!        else
-!          micro_naai(i,k) = 0._kind_phys
-!        end if
-!      end do
-!    end do
+    do i = 1, micro_ncol
+      do k = 1, micro_nlev
+        if ( tgrs(i,k) .lt. 273.15_kind_phys .and. tgrs(i,k) .gt. 236.15_kind_phys .and. qgrs(i, k, ntcw) .gt. 1.e-12_kind_phys ) then
+          esl = svp_water(tgrs(i,k))
+          esi = svp_ice(tgrs(i,k))
+          deles = (esl - esi)
+          rhoair = prsl(i,k)/(rair*tgrs(i,k))
+          micro_naai(i,k) = 1.e3_kind_phys * exp( 12.96_kind_phys*deles/esi - 0.639_kind_phys ) / rhoair / micro_timestep ! kg-1 s-1 
+        else
+          micro_naai(i,k) = 0._kind_phys
+        end if
+      end do
+    end do
 !----- IH
     
   end subroutine mp_pumas_pre_run
