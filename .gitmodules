@@ -6,3 +6,6 @@
   path = physics/MP/TEMPO/TEMPO
   url = https://github.com/NCAR/TEMPO
   branch = main
+[submodule "physics/MP/pumas/PUMAS"]
+	path = physics/MP/pumas/PUMAS
+	url = https://github.com/ihursmas/PUMAS
