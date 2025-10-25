@@ -29,6 +29,9 @@
         imp_physics_thompson, imp_physics_tempo, imp_physics_gfdl,             &
         imp_physics_zhao_carr,                                                 &
         imp_physics_zhao_carr_pdf, imp_physics_mg, imp_physics_wsm6,           &
+!+ PUMAS
+        imp_physics_pumas,                                                     &
+!- PUMAS
         imp_physics_fer_hires, iovr, iovr_rand, iovr_maxrand, iovr_max,        &
         iovr_dcorr, iovr_exp, iovr_exprand, idcor, idcor_con, idcor_hogan,     &
         idcor_oreopoulos, dcorr_con, julian, yearlen, lndp_var_list, lsswr,    &
@@ -126,6 +129,9 @@
                                            imp_physics_zhao_carr,              &
                                            imp_physics_zhao_carr_pdf,          &
                                            imp_physics_mg, imp_physics_wsm6,   &
+!+ PUMAS
+                                           imp_physics_pumas,                  &
+!- PUMAS
                                            imp_physics_nssl,                   &
                                            imp_physics_fer_hires,              &
                                            yearlen, icloud, iaermdl, iaerflg
@@ -844,7 +850,10 @@
             do k=1,lm
               k1 = k + kd
               do i=1,im
-                cldcov(i,k1) = mg_cld(i,k)
+!+ PUMAS: Zeroing 'cldcov' so that the cloud fraction diagnostics aligns the GFS_v17_p8_ugwpv1 suite more
+!                cldcov(i,k1) = mg_cld(i,k)
+                cldcov(i,k1) = 0.0
+!- PUMAS
                 effrl(i,k1)  = effrl_inout(i,k)
                 effri(i,k1)  = effri_inout(i,k)
                 effrr(i,k1)  = effrr_in(i,k)
@@ -855,7 +864,10 @@
             do k=1,lm
               k1 = k + kd
               do i=1,im
-                cldcov(i,k1) = mg_cld(i,k)
+!+ PUMAS: Zeroing 'cldcov' so that the cloud fraction diagnostics aligns the GFS_v17_p8_ugwpv1 suite more
+!                cldcov(i,k1) = mg_cld(i,k)
+                cldcov(i,k1) = 0.0
+!- PUMAS
               enddo
             enddo
           endif
@@ -1041,6 +1053,9 @@
      &       imp_physics_gfdl, imp_physics_thompson,                    &
      &       imp_physics_wsm6, imp_physics_tempo,                       &
      &       imp_physics_zhao_carr, imp_physics_zhao_carr_pdf,          &
+!+ PUMAS
+     &       imp_physics_pumas,                                         &
+!- PUMAS
      &       imp_physics_mg, iovr, iovr_rand, iovr_maxrand, iovr_max,   &
      &       iovr_dcorr, iovr_exp, iovr_exprand, idcor, idcor_con,      &
      &       idcor_hogan, idcor_oreopoulos, lcrick, lcnorm,             &

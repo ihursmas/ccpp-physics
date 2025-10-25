@@ -14,6 +14,9 @@
         ntwa, ntia, ntgl, ntoz, ntke, ntkev, nqrimef, trans_aero, ntchs, ntchm,          &
         ntccn, nthl, nthnc, ntgv, nthv, ntrz, ntgz, nthz,                                &
         imp_physics, imp_physics_gfdl, imp_physics_thompson, imp_physics_wsm6,           &
+!+ PUMAS
+        imp_physics_pumas,                                                               &
+!- PUMAS
         imp_physics_zhao_carr, imp_physics_mg, imp_physics_fer_hires, imp_physics_nssl,  &
         ltaerosol, mraerosol, nssl_ccn_on, nssl_hail_on, nssl_3moment,                   &
         hybedmf, do_shoc, satmedmf, qgrs, vdftra, save_u, save_v, save_t, save_q,        &
@@ -35,6 +38,9 @@
       integer, intent(in) :: imp_physics_zhao_carr, imp_physics_mg, imp_physics_fer_hires
       logical, intent(in) :: ltaerosol, hybedmf, do_shoc, satmedmf, flag_for_pbl_generic_tend, mraerosol
       integer, intent(in) :: imp_physics_nssl
+!+ PUMAS
+      integer, intent(in) :: imp_physics_pumas
+!- PUMAS
       logical, intent(in) :: nssl_hail_on, nssl_ccn_on, nssl_3moment
 
       real(kind=kind_phys), dimension(:,:,:), intent(in) :: qgrs
@@ -177,6 +183,26 @@
             enddo
             rtg_ozone_index = 10
           endif
+!+ PUMAS: PUMAS
+        elseif (imp_physics == imp_physics_pumas) then 
+          do k=1,levs
+            do i=1,im
+              vdftra(i,k,1)  = qgrs(i,k,ntqv)
+              vdftra(i,k,2)  = qgrs(i,k,ntcw)
+              vdftra(i,k,3)  = qgrs(i,k,ntiw)
+              vdftra(i,k,4)  = qgrs(i,k,ntrw)
+              vdftra(i,k,5)  = qgrs(i,k,ntsw)
+              vdftra(i,k,6)  = qgrs(i,k,ntgl)
+              vdftra(i,k,7)  = qgrs(i,k,ntlnc)
+              vdftra(i,k,8)  = qgrs(i,k,ntinc)
+              vdftra(i,k,9)  = qgrs(i,k,ntrnc)
+              vdftra(i,k,10) = qgrs(i,k,ntsnc)
+              vdftra(i,k,11) = qgrs(i,k,ntgnc)
+              vdftra(i,k,12) = qgrs(i,k,ntoz)
+            enddo
+          enddo
+          rtg_ozone_index = 12
+!- PUMAS
         elseif (imp_physics == imp_physics_gfdl) then
   ! GFDL MP
           do k=1,levs
@@ -276,6 +302,9 @@
                                         imp_physics_thompson, ltaerosol,mraerosol, &
                                         imp_physics_mg, ntgl, imp_physics_gfdl, &
                                         imp_physics_zhao_carr, imp_physics_nssl,&
+!+ PUMAS
+                                        imp_physics_pumas,                      &
+!- PUMAS
                                         nssl_hail_on, nssl_ccn_on, nssl_3moment, kk, &
                                         errmsg, errflg)
           if (errflg /= 0) return

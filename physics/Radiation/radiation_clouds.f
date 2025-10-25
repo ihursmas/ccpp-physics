@@ -316,6 +316,10 @@
             print *,'   --- WSM6 cloud microphysics'
          elseif (imp_physics == 10) then
             print *,'   --- MG cloud microphysics'
+!+ PUMAS
+         elseif (imp_physics == 20) then
+            print *,'   --- PUMAS cloud microphysics'
+!- PUMAS
          elseif (imp_physics == 15) then
             print *,'   --- Ferrier-Aligo cloud microphysics'
          elseif (imp_physics == 17) then
@@ -347,6 +351,9 @@
      &       imp_physics_gfdl, imp_physics_thompson, imp_physics_wsm6,  &
      &       imp_physics_tempo,                                         &
      &       imp_physics_zhao_carr, imp_physics_zhao_carr_pdf,          &
+!+ PUMAS
+     &       imp_physics_pumas,                                         &
+!- PUMAS
      &       imp_physics_mg, iovr, iovr_rand, iovr_maxrand, iovr_max,   &
      &       iovr_dcorr, iovr_exp, iovr_exprand, idcor, idcor_con,      &
      &       idcor_hogan, idcor_oreopoulos, lcrick, lcnorm,             &
@@ -525,6 +532,9 @@
      &     imp_physics_wsm6,            ! Flag for wsm6 scheme
      &     imp_physics_zhao_carr,       ! Flag for zhao-carr scheme
      &     imp_physics_zhao_carr_pdf,   ! Flag for zhao-carr+PDF scheme
+!+ PUMAS
+     &     imp_physics_pumas,           ! Flag for PUMAS scheme
+!- PUMAS
      &     imp_physics_mg               ! Flag for MG scheme
 
       integer,              intent(in)  ::                               &
@@ -745,6 +755,9 @@
           endif ! MYNN PBL or GF
 
         elseif(imp_physics == imp_physics_thompson                      &
+!+ PUMAS: Currently using the same cloud fraction diagnostics as GFSv17
+     &         .or. imp_physics == imp_physics_pumas                    &
+!- PUMAS
      &         .or. imp_physics == imp_physics_tempo) then      ! Thompson/TEMPO MP
 
           if(do_mynnedmf .or. imfdeepcnv == imfdeepcnv_gf               &
@@ -2192,14 +2205,16 @@
          iwp_ex(i) = iwp_ex(i)*1.E-3
       enddo
 
-      if (uni_cld) then     ! use unified sgs clouds generated outside
-        do k = 1, NLAY
-          do i = 1, IX
-            cldtot(i,k) = cldcov(i,k)
-          enddo
-        enddo
-
-      else
+!+ PUMAS: Currently using the same cloud fraction diagnostics as GFSv17, so 'uni_cld' is temporarily useless
+!      if (uni_cld) then     ! use unified sgs clouds generated outside
+!        do k = 1, NLAY
+!          do i = 1, IX
+!            cldtot(i,k) = cldcov(i,k)
+!          enddo
+!        enddo
+!
+!      else
+!- PUMAS
 
 !> - Calculate layer cloud fraction.
 
@@ -2213,7 +2228,9 @@
      &        cldtot )
         endif
 
-      endif                                ! if (uni_cld) then
+!+ PUMAS: To be consistent with the above if loop
+!      endif                                ! if (uni_cld) then
+!- PUMAS
 
       do k = 1, NLAY
         do i = 1, IX

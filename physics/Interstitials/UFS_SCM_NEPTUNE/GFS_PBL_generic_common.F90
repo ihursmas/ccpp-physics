@@ -15,12 +15,18 @@
                                           imp_physics_thompson, ltaerosol,mraerosol,   &
                                           imp_physics_mg, ntgl, imp_physics_gfdl, &
                                           imp_physics_zhao_carr, imp_physics_nssl,&
+!+ PUMAS
+                                          imp_physics_pumas,                      &
+!- PUMAS
                                           nssl_hail_on, nssl_ccn_on, nssl_3moment, kk, &
                                           errmsg, errflg)
       implicit none
       !
       integer, intent(in )          :: imp_physics, imp_physics_wsm6,          &
                                        imp_physics_thompson,                   &
+!+ PUMAS
+                                       imp_physics_pumas,                      &
+!- PUMAS
                                        imp_physics_mg, ntgl, imp_physics_gfdl, &
                                        imp_physics_zhao_carr,imp_physics_nssl
       logical, intent(in )          :: ltaerosol, mraerosol, nssl_hail_on, nssl_ccn_on, nssl_3moment
@@ -50,6 +56,10 @@
         else
           kk = 10
         endif
+!+ PUMAS
+      elseif (imp_physics == imp_physics_pumas) then  
+          kk = 12
+!- PUMAS
       elseif (imp_physics == imp_physics_gfdl) then
 ! GFDL MP
         kk = 7

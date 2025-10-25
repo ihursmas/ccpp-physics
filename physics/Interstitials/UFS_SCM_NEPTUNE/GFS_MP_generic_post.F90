@@ -17,6 +17,9 @@
 !!
       subroutine GFS_MP_generic_post_run(                                                                                 &
         im, levs, kdt, nrcm, nncl, ntcw, ntrac, imp_physics, imp_physics_gfdl, imp_physics_thompson, imp_physics_tempo,   &
+!+ PUMAS
+        imp_physics_pumas,                                                                                                &
+!- PUMAS
         imp_physics_nssl, imp_physics_mg, imp_physics_fer_hires, cal_pre, cplflx, cplchm, cpllnd, progsigma, con_g,       &
         rhowater, rainmin, dtf, frain, rainc, rain1, rann, xlat, xlon, gt0, gq0, prsl, prsi, phii, tsfc, ice, phil, htop, &
         refl_10cm, imfshalcnv,imfshalcnv_gf,imfdeepcnv,imfdeepcnv_gf,imfdeepcnv_samf, con_t0c, snow, graupel, save_t,     &
@@ -36,6 +39,9 @@
       integer, intent(in) :: im, levs, kdt, nrcm, nncl, ntcw, ntrac, num_dfi_radar, index_of_process_dfi_radar
       integer, intent(in) :: imp_physics, imp_physics_gfdl, imp_physics_thompson, imp_physics_mg, imp_physics_fer_hires
       integer, intent(in) :: imp_physics_nssl, iopt_lake_clm, iopt_lake, lkm, imp_physics_tempo
+!+ PUMAS
+      integer, intent(in) :: imp_physics_pumas
+!- PUMAS
       logical, intent(in) :: cal_pre, lssav, ldiag3d, qdiag3d, cplflx, cplchm, cpllnd, progsigma, exticeden
       integer, intent(in) :: index_of_temperature,index_of_process_mp,use_lake_model(:)
       integer, intent(in) :: imfshalcnv,imfshalcnv_gf,imfdeepcnv,imfdeepcnv_gf,imfdeepcnv_samf
@@ -424,7 +430,10 @@
           enddo
         endif ! lsm==lsm_ruc
       elseif( .not. cal_pre) then
-        if (imp_physics == imp_physics_mg) then          ! MG microphysics
+!+ PUMAS
+!        if (imp_physics == imp_physics_mg) then          ! MG microphysics
+        if (imp_physics == imp_physics_mg .or. imp_physics == imp_physics_pumas) then          ! MG microphysics
+!- PUMAS
           do i=1,im
             if (rain(i) > rainmin) then
               tem1 = max(zero, (rain(i)-rainc(i))) * sr(i)

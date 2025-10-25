@@ -17,6 +17,9 @@
                ntiw, ntclamt, ntrw, ntsw, ntrnc, ntsnc, ntgl, ntgnc,    &
                xlon, xlat, gt0, gq0, sigmain,sigmaout,qmicro,           &
                omegain,omegaout,imp_physics, imp_physics_mg,            &
+!+ PUMAS
+               imp_physics_pumas,                                       &
+!- PUMAS
                imp_physics_zhao_carr, imp_physics_zhao_carr_pdf,        &
                imp_physics_gfdl, imp_physics_thompson, dtidx, ntlnc,    &
                imp_physics_wsm6, imp_physics_fer_hires, prsi, ntinc,    &
@@ -34,6 +37,9 @@
       logical, intent(in)     :: otsptflag(:)!  on/off switch for tracer transport (size ntrac)
       integer,              intent(in   )                   :: im, levs, nn, ntrac, ntcw, ntiw, ntclamt, ntrw, ntsw,&
         ntrnc, ntsnc, ntgl, ntgnc, imp_physics, imp_physics_mg, imp_physics_zhao_carr, imp_physics_zhao_carr_pdf,   &
+!+ PUMAS
+        imp_physics_pumas,                                                               &
+!- PUMAS
         imp_physics_gfdl, imp_physics_thompson, imp_physics_wsm6,imp_physics_fer_hires,  &
         imp_physics_nssl, imp_physics_tempo, me, index_of_process_conv_trans
       integer,              intent(in   ), dimension(:)     :: islmsk, kpbl, kinver
@@ -140,7 +146,10 @@
       endif ! end if_ras or cfscnv or samf
 
       if (ntcw > 0) then
-        if (imp_physics == imp_physics_mg .and. rhcpbl < 0.5_kind_phys) then ! compute rhc for GMAO macro physics cloud pdf
+!+ PUMAS
+!        if (imp_physics == imp_physics_mg .and. rhcpbl < 0.5_kind_phys) then ! compute rhc for GMAO macro physics cloud pdf
+        if ((imp_physics == imp_physics_mg .or. imp_physics == imp_physics_pumas) .and. rhcpbl < 0.5_kind_phys) then ! compute rhc for GMAO macro physics cloud pdf
+!- PUMAS
           do i=1,im
             tx1(i) = one / prsi(i,1)
             tx2(i) = one - rhcmax*work1(i)-rhcbot*work2(i)
@@ -230,7 +239,11 @@
         enddo
           save_qi(:,:) = clw(:,:,1)
           save_qc(:,:) = clw(:,:,2)
-      elseif (imp_physics == imp_physics_wsm6 .or. imp_physics == imp_physics_mg .or. imp_physics == imp_physics_fer_hires) then
+!+ PUMAS
+!      elseif (imp_physics == imp_physics_wsm6 .or. imp_physics == imp_physics_mg .or. imp_physics == imp_physics_fer_hires) then
+      elseif (imp_physics == imp_physics_wsm6 .or. imp_physics == imp_physics_mg .or. &
+           imp_physics == imp_physics_pumas .or. imp_physics == imp_physics_fer_hires) then
+!- PUMAS
         do k=1,levs
           do i=1,im
             clw(i,k,1) = gq0(i,k,ntiw)                    ! ice
