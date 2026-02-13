@@ -100,6 +100,13 @@
   dimensions = ()
   type = integer
   intent = in
+[imp_physics_pumas]
+  standard_name = identifier_for_pumas_microphysics_scheme
+  long_name = choice of PUMAS microphysics scheme
+  units = flag
+  dimensions = ()
+  type = integer
+  intent = in
 [imp_physics_fer_hires]
   standard_name = identifier_for_fer_hires_microphysics_scheme
   long_name = choice of Ferrier-Aligo microphysics scheme

@@ -35,6 +35,9 @@ contains
 !! \htmlinclude GFS_rrtmgp_setup_init.html
 !!
   subroutine GFS_rrtmgp_setup_init(do_RRTMGP, imp_physics, imp_physics_fer_hires,        &
+!+ PUMAS 
+       imp_physics_pumas,                                                                &
+!- PUMAS
        imp_physics_gfdl, imp_physics_thompson, imp_physics_wsm6, imp_physics_zhao_carr,  &
        imp_physics_zhao_carr_pdf, imp_physics_mg,  si, levr, ictm, isol, ico2, iaer,     &
        ntcw, ntoz, iovr, isubc_sw, isubc_lw, lalw1bd, idate,               &
@@ -52,6 +55,9 @@ contains
          imp_physics_wsm6,          & !< Flag for wsm6 scheme
          imp_physics_zhao_carr,     & !< Flag for zhao-carr scheme
          imp_physics_zhao_carr_pdf, & !< Flag for zhao-carr+PDF scheme
+!+ PUMAS
+         imp_physics_pumas          & !< Flag for PUMAS scheme
+!- PUMAS
          imp_physics_mg               !< Flag for MG scheme
     real(kind_phys), intent(in) :: &
          con_pi, con_t0c, con_c, con_boltz, con_plnk, con_solr_2008, con_solr_2002

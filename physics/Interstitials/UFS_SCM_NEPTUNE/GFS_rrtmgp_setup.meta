@@ -74,6 +74,13 @@
   dimensions = ()
   type = integer 
   intent = in
+[imp_physics_pumas]
+  standard_name = identifier_for_pumas_microphysics_scheme
+  long_name = choice of PUMAS microphysics scheme
+  units = flag
+  dimensions = ()
+  type = integer
+  intent = in
 [si]
   standard_name = sigma_pressure_hybrid_vertical_coordinate
   long_name = vertical sigma coordinate for radiation initialization

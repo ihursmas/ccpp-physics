@@ -525,14 +525,6 @@
   type = real
   kind = kind_phys
   intent = out
-[qgrs_micro_input]
-  standard_name = tracer_concentration_microphysics_input
-  long_name = tracer concentration before entering a microphysics scheme
-  units = kg kg-1
-  dimensions = (horizontal_loop_extent,vertical_layer_dimension,number_of_tracers)
-  type = real
-  kind = kind_phys
-  intent = out
 [errmsg]
   standard_name = ccpp_error_message
   long_name = error message for error handling in CCPP

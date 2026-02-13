@@ -58,7 +58,7 @@ contains
        micro_numsnow_tend_external, micro_effi_external, micro_frzimm, micro_frzcnt, micro_frzdep, &
 !+ IH: Additional required vars
        micro_timestep, do_shoc, cld_shoc, clcn_i, tice_i, rhc_i, tgrs_save, qgrs_save, ntclamt, & 
-       qgrs_micro_input, clouds1,                                                               &
+       clouds1,                                                                                 &
 !- IH
        errmsg, errflg)
 
@@ -91,7 +91,7 @@ contains
 
     ! Outputs
 !+ IH
-    real(kind_phys), dimension(:,:,:), intent(out) :: qgrs_save, qgrs_micro_input
+    real(kind_phys), dimension(:,:,:), intent(out) :: qgrs_save
 
     real(kind_phys), dimension(:,:), intent(out) :: tgrs_save,                           &
 !    real(kind_phys), dimension(1:micro_ncol,1:micro_nlev), intent(out) ::                &
@@ -117,7 +117,6 @@ contains
     ! Save current air temperature & tracer concentrations
     tgrs_save = tgrs
     qgrs_save = qgrs
-    qgrs_micro_input = qgrs
 !- IH
     
     ! Sub sample input state by n-subcolumns
